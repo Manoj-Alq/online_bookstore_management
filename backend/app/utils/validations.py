@@ -14,11 +14,21 @@ class Validations:
             if PASSWORD_REGEX.match(password):
                 return True
             else: False
+        
+        def phoneNumber_validation(self,phoneNumber):
+            pattern = re.compile(r"^\d{10}$")
+            if pattern.match(phoneNumber):
+                return True
 
         def empty_validation(self, obj):
             for key, value in obj:
                 if value == "":
-                    return False
+                    return True
+                
+        def empty_key_validation(self, obj):
+            for key, value in obj:
+                if value == "":
+                    return key
                 
         def login_validation(Self,user):
             if user.is_active == True:
@@ -35,5 +45,14 @@ class Validations:
         def None_validation(self,*args):
             for i in args:
                 if i == None:
+                    return True
+        def duplication_username_validate(self,db,model,key):
+                db_data = db.query(model).filter(model.username == key).first()
+                if db_data:
+                    return True
+                
+        def duplication_email_validate(self,db,model,key):
+                db_data = db.query(model).filter(model.email == key).first()
+                if db_data:
                     return True
                 
