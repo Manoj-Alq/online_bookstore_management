@@ -111,7 +111,8 @@ def signoutAuthorService(db, db_author):
         db_author.is_active = False
         db_token = db.query(AuthorToken).filter(
             AuthorToken.Author_id == db_author.Author_id).first()
-        db.delete(db_token)
+        if db_token != None:
+            db.delete(db_token)
         db.commit()
         return JSONResponse({
             "message": "logged out successfully"

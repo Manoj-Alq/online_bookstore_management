@@ -64,13 +64,14 @@ def getMyProfileController(db,Auth_head):
     return getMyProfileService(db, db_author)
 
 def updateAuthorController(db,author,Auth_head,id,role):
-    author_id = decode_token_id(Auth_head, model=AuthorToken, db=db)
     if id != None:
         if role == "admin":
+            admin_id = decode_token_id(Auth_head, model=AdminToken, db=db)
             db_author = db.query(Author).filter(Author.Author_id == id).first()
         else:
             errorhandler(403, "You can't update others account")
     else:
+        author_id = decode_token_id(Auth_head, model=AuthorToken, db=db)
         db_author = db.query(Author).filter(Author.Author_id == author_id).first()
         print(db_author.username)
     if db_author == None:
@@ -90,23 +91,20 @@ def updateAuthorController(db,author,Auth_head,id,role):
     return updateAuthorService(db,author,db_author)
 
 def logoutAuthorController(db,Auth_head,id,role):
-    if role != "author":
-        admin_id = decode_token_id(Auth_head, model=AdminToken, db=db)
-        if id == None:
-                errorhandler(400, "admin must use id to logout author")
-    if role != "admin":
-        author_id = decode_token_id(Auth_head, model=AuthorToken, db=db)
-        if id != None:
-                errorhandler(403, "author can't logout another author")
-    if id != None:
-        db_author = db.query(Author).filter(Author.Author_id == id).first()
-        if db_author == None:
-                errorhandler(404, "author not found")
-    else:
-        db_author = db.query(Author).filter(Author.Author_id == author_id).first()
+    if role == "admin":
+            if id != None:
+                admin_id = decode_token_id(Auth_head, model=AdminToken, db=db)
+                db_author = db.query(Author).filter(Author.Author_id == id).first()
+            else:
+                errorhandler(400,"Id must for Admin")
             
+    else:
+        author_id = decode_token_id(Auth_head, model=AuthorToken, db=db)
+        db_author = db.query(Author).filter(Author.Author_id == author_id).first()
+
     if validation.User_delete_validation(db_author):
             errorhandler(404,"author not found")   
+
     if db_author.is_active == False:
             errorhandler(400, f"{id} is not loggedin yet")
 
@@ -120,6 +118,8 @@ def deleteAuthorController(db,Auth_head,id,role):
         else:
             errorhandler(400,"You can't delete another acoount")
     else:
+        if role == "admin":
+            errorhandler(400,"Id must for admin")
         author_id = decode_token_id(Auth_head, model=AuthorToken, db=db)
         db_author = db.query(Author).filter(Author.Author_id == author_id).first()
     if db_author == None:

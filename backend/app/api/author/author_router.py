@@ -25,7 +25,7 @@ async def logInauthor(author: AuthorLogIn,Auth_head:str = Depends(get_authorizat
 
 @router.get("/author/getMyProfile/",dependencies = [Depends(httpbearer)], response_model=AuthorResponse, tags=["Author"], summary="author can fetch their own profile here")
 async def getMyProfile(Auth_head:str = Depends(get_authorization_header),role:str = Depends(author_authorization),db: Session = Depends(get_session)):
-    if role == "author":
+    if role == "author":    
         return getMyProfileController(db,Auth_head)
     else:
         errorhandler(403,"You can't access this route")

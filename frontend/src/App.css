@@ -1,38 +1,95 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Belanosima&family=Outfit:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap');
+
+/* For WebKit (Chrome, Safari) */
+body::-webkit-scrollbar {
+  width: 12px; /* Set the width of the scrollbar */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body::-webkit-scrollbar-thumb {
+  background-color: #0099FF; /* Set the color of the thumb */
+  border-radius: 6px; /* Set the radius of the thumb */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body::-webkit-scrollbar-track {
+  background-color: #f0f0f0; /* Set the color of the track */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+.title-txt {
+  /* font-family: 'Belanosima', sans-serif; */
+  font-family: 'Outfit', sans-serif;
 }
 
-.App-link {
-  color: #61dafb;
+.text-style{
+  font-family: 'M PLUS Rounded 1c', sans-serif;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.primary-bg {
+  background-color: #0099FF;
+}
+
+.logo {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.title_name {
+  font-size: 6rem;
+}
+
+.welcome-para {
+  text-indent: 5rem;
+  font-size: 1.5rem;
+  color: #979797;
+  font-weight: bold;
+}
+
+.arrow{
+  width: 4rem;
+}
+
+.bookimg{
+  width: 20rem;
+  height: 25rem;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+  transition: background-color 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.header.opaque {
+  background-color: #0099FF; /* Set your desired opaque background color */
+}
+
+/* login */
+.loginpage{
+  width: 100vw;
+  height: 100vh;
+}
+
+.loginPage{
+  width: 100%;
+}
+
+.loginDiv{
+  width: 50%;
+  height: 70%;
+  margin: 0 auto;
+}
+
+.input{
+  background-color: #D9D9D9;
+}
+
+.breadcrumb{
+  position: absolute;
+  top: 10%;
+  padding: 2rem;
 }

@@ -1,6 +1,7 @@
 from configuration.config import *
 from api.admin.admin_router import *
 from api.author.author_router import *
+from api.customer.customer_router import *
 import uvicorn
 
 Base.metadata.create_all(bind=engine)

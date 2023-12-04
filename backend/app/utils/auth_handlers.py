@@ -66,15 +66,6 @@ def decode_token_role(token,model, db = None):
         if tok == None:
             raise HTTPException(status_code=401, detail="Token is expired")
     return decode_token
-
-def decode_token_teacher(model, db = None):
-    decode_token = jwt.decode(model.split("Bearer")[1].strip(), SECRET_KEY, algorithms=["HS256"])['teacher']
-    if db != None:
-        tok = db.query(model).filter(model.token == model.split("Bearer")[1].strip()).first()
-        print(tok)
-        if tok == None:
-            raise HTTPException(status_code=401, detail="Token is expired")
-    return decode_token
     
 def get_authorization_header(request: Request):
     return request.headers.get("Authorization")
@@ -99,6 +90,21 @@ def author_admin_authorization(request : Request):
     decode_tokenrole = jwt.decode(auth_head.split("Bearer")[1].strip(), SECRET_KEY, algorithms=["HS256"])['role']
     print("teacher",decode_tokenrole)
     if decode_tokenrole != "admin" and decode_tokenrole != "author":
+        errorhandler(403, "You're not authorize")
+    return decode_tokenrole
+
+def customer_authorization(request: Request):
+    auth_head = request.headers.get("Authorization")
+    decode_tokenrole = jwt.decode(auth_head.split("Bearer")[1].strip(), SECRET_KEY, algorithms=["HS256"])['role']
+    if decode_tokenrole != "customer":
+        errorhandler(403, "You're not authorize")
+    return decode_tokenrole
+
+def customer_admin_authorization(request : Request):
+    auth_head = request.headers.get("Authorization")
+    decode_tokenrole = jwt.decode(auth_head.split("Bearer")[1].strip(), SECRET_KEY, algorithms=["HS256"])['role']
+    print("teacher",decode_tokenrole)
+    if decode_tokenrole != "admin" and decode_tokenrole != "customer":
         errorhandler(403, "You're not authorize")
     return decode_tokenrole
 
