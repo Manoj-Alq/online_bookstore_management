@@ -21,6 +21,7 @@ def signupAuthorController(db, author):
     ):
         print(author.first_name,author.last_name,author.email,author.DOB,author.bio,author.twitter_handle,author.nationality,author.websitelink,author.fav_genres,author.phone_number,author.username,author.password)
         errorhandler(400, "All fields are required")
+    print("author",type(author))
     if validation.empty_validation(author):
         key = validation.empty_key_validation(author)
         errorhandler(400, f"{key} shouldn't be empty")

@@ -46,6 +46,7 @@ class Validations:
             for i in args:
                 if i == None:
                     return True
+                
         def duplication_username_validate(self,db,model,key):
                 db_data = db.query(model).filter(model.username == key).first()
                 if db_data:

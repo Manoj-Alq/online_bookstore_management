@@ -112,7 +112,7 @@ def signOutController(db, Auth_head, id):
     if db_admin.is_active == False:
         errorhandler(400, f"{id} is not loggedin yet")
     db_token = db.query(AdminToken).filter(
-        AdminToken.admin_id == db_admin.admin_id).first()
+        AdminToken.admin_id == admin_id).first()
     print(db_token)
     if db_token == None:
         errorhandler(400, "token is expired")
