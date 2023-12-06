@@ -70,7 +70,8 @@ def loginAuthorService(db, author, db_author):
             "username": db_author.username
         })
     except Exception as e:
-        print(e)
+        db.rollback()
+        errorhandler(400, f"{e}")
 
 def getMyProfileService(db, db_author):
     try:

@@ -19,9 +19,9 @@ def signupAuthorController(db, author):
     if validation.None_validation(
         author.first_name,author.last_name,author.email,author.DOB,author.bio,author.twitter_handle,author.nationality,author.websitelink,author.fav_genres,author.phone_number,author.username,author.password
     ):
-        print(author.first_name,author.last_name,author.email,author.DOB,author.bio,author.twitter_handle,author.nationality,author.websitelink,author.fav_genres,author.phone_number,author.username,author.password)
+    
         errorhandler(400, "All fields are required")
-    print("author",type(author))
+
     if validation.empty_validation(author):
         key = validation.empty_key_validation(author)
         errorhandler(400, f"{key} shouldn't be empty")
@@ -57,7 +57,7 @@ def logInAuthorController(db,author):
 
 def getMyProfileController(db,Auth_head):
     author_id = decode_token_id(Auth_head,model=AuthorToken,db=db)
-    print('id',author_id)
+
     db_author = db.query(Author).filter(Author.Author_id == author_id).first()
     if validation.User_delete_validation(db_author):
         errorhandler(404,"User not found")   
@@ -74,7 +74,7 @@ def updateAuthorController(db,author,Auth_head,id,role):
     else:
         author_id = decode_token_id(Auth_head, model=AuthorToken, db=db)
         db_author = db.query(Author).filter(Author.Author_id == author_id).first()
-        print(db_author.username)
+    
     if db_author == None:
          errorhandler(404, "author not found")
     if db_author != None:
@@ -125,7 +125,7 @@ def deleteAuthorController(db,Auth_head,id,role):
         db_author = db.query(Author).filter(Author.Author_id == author_id).first()
     if db_author == None:
         errorhandler(404,"author not found")
-        print(db_author, "author")
+    
     if validation.User_delete_validation(db_author):
         errorhandler(404,"author not found")   
     return deleteAuthorService(db, db_author)

@@ -81,7 +81,7 @@ def author_authorization(request: Request):
     auth_head = request.headers.get("Authorization")
     decode_tokenrole = jwt.decode(auth_head.split("Bearer")[1].strip(), SECRET_KEY, algorithms=["HS256"])['role']
     print("teacher",decode_tokenrole)
-    if decode_tokenrole != "admin":
+    if decode_tokenrole != "author":
         errorhandler(403, "You're not authorize")
     return decode_tokenrole
 

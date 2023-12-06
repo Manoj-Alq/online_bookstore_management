@@ -8,6 +8,7 @@ class cartresponse(BaseModel):
     author : str = None
     price : int = None
     counts : int = None
+    total : int = None
     created_at : datetime = None
     created_by : Optional[int]
     updated_at : Optional[datetime]

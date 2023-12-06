@@ -11,6 +11,7 @@ class Cart(Base):
     author = Column(String, nullable=False)
     price = Column(Integer,nullable=False)
     counts = Column(Integer,nullable=False, default=1)
+    total = Column(Integer,nullable=False)
     is_deleted = Column(Boolean, default=False)
     created_at = Column(DateTime, nullable=False)
     created_by =Column(Integer)
