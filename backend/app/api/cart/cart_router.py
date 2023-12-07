@@ -29,5 +29,9 @@ async def signupcart(id:int = None,Auth_head:str = Depends(get_authorization_hea
     return deletecartController(db, Auth_head, id)
 
 @router.post("/buyBooks",dependencies = [Depends(httpbearer)], tags=["Cart"])
-async def create_order(role:str = Depends(customer_authorization),Auth_head:str = Depends(get_authorization_header),db: Session = Depends(get_session)):
-    return buyBooksController(db,Auth_head)
+async def create_order(request:Request,role:str = Depends(customer_authorization),Auth_head:str = Depends(get_authorization_header),db: Session = Depends(get_session)):
+    return buyBooksController(db,Auth_head,request)
+
+@router.post("/verify_payment",dependencies = [Depends(httpbearer)], tags=["Cart"])
+async def create_order(order_id: str, payment_id: str,request:Request,role:str = Depends(customer_authorization),Auth_head:str = Depends(get_authorization_header),db: Session = Depends(get_session)):
+    return verify_payment_controller(db,order_id)

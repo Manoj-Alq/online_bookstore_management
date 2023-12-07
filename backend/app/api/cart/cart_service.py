@@ -3,11 +3,12 @@ from utils.handlers import errorhandler
 from fastapi.responses import JSONResponse
 from datetime import datetime
 from razorpay import Client
+import json
 
 RAZORPAY_KEY_ID = "rzp_test_RAMJ99EXsBQTjs"
 RAZORPAY_KEY_SECRET = "cHM6NdajU4bfG1RIJUJkv0CW"
 
-razorpay_client = Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+client = Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
 def getAllcartservice(db):
     try:
@@ -82,12 +83,31 @@ def deletecartervice(db,db_cart):
         errorhandler(400,f"{e}")
 
 def buyBookService(amount):
-    try:
-        # Convert the amount to paisa
-        amount_in_paisa = amount * 100
+    order_data = {
+        "amount": amount,
+        "currency": "INR",
+        "payment_capture": 1
+    }
 
-        order_response = razorpay_client.order.create({"amount": amount_in_paisa, "currency": "INR"})
-        order_id = order_response["id"]
-        return JSONResponse(content={"order_id": order_id,"message":"Your order succeeded"})
+    try:
+        response = client.order.create(data=order_data)
+        order_id = response['id']
+        # payment_id = response['payment'][0]['id']
+        return response
     except Exception as e:
-        errorhandler(400, f"{e}")
+        errorhandler(400,f"order errors{e}")
+
+    # Use test card details for payment
+
+def verify_payment(order_id: str, payment_id: str):
+    try:
+        # Verify the payment with Razorpay
+        payment = client.payment.fetch(payment_id)
+
+        # Check the payment status
+        if payment['status'] == 'captured':
+            return {"status": "Payment successful"}
+        else:
+            return {"status": "Payment failed"}
+    except Exception as e:
+        errorhandler(400,f"{e}")

@@ -5,13 +5,38 @@ from fastapi.responses import JSONResponse
 import base64
 from io import BytesIO
 from PIL import Image
+from sqlalchemy import func
 
-def getAllbooksservice(db):
+def getAllbooksservice(db,search =None, page =None, page_size= None,publication_year=None,genre=None):
     try:
-        db_books= db.query(Books).filter(Books.is_deleted == False).all()
-        # time.sleep(2)
+        db_books_query = db.query(Books).filter(Books.is_deleted == False)
+
+        if search:
+            db_books_query = db_books_query.filter(
+                (Books.title.ilike(f"%{search}%")) | (Books.author.ilike(f"%{search}%"))
+                
+            )
+
+        # Apply genre filter if genre is provided
+        if genre:
+            # Use the @> operator for array containment
+            db_books_query = db_books_query.filter(Books.genre.any(genre))
+
+        # Apply publication year filter if year is provided
+        if publication_year:
+            db_books_query = db_books_query.filter(Books.publication_year == publication_year)
+
+        # Apply pagination
+        if page is not None and page_size is not None:
+            skip = (page - 1) * page_size
+            db_books_query = db_books_query.offset(skip).limit(page_size)
+
+        # Execute the final query and retrieve the results
+        db_books = db_books_query.all()
+
         return db_books
     except Exception as e:
+        print(e)
         db.rollback()
         errorhandler(400,f"{e}")
 

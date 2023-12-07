@@ -3,8 +3,8 @@ from utils.validations import Validations
 
 validation = Validations()
 
-def getAllbooksController(db):
-    return getAllbooksservice(db)
+def getAllbooksController(db,search,page,page_size,publication_year,genre):
+    return getAllbooksservice(db,search,page,page_size,publication_year,genre)
 
 def getSingleBooksController(db, id):
     db_books = db.query(Books).filter(Books.book_id == id, Books.is_deleted == False).first()

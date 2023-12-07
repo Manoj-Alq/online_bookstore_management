@@ -35,7 +35,7 @@ def deletecartController(db, Auth_head, id):
     
     return deletecartervice(db,db_cart)
 
-def buyBooksController(db,Auth_head):
+def buyBooksController(db,Auth_head,request):
     customer_id  = decode_token_id(Auth_head)
     carts_db = db.query(Cart).filter(Cart.created_by == customer_id,Cart.is_deleted == False).all()
     total_amount = 0
@@ -45,4 +45,7 @@ def buyBooksController(db,Auth_head):
     if total_amount <= 0:
         errorhandler(400,"Amout should be greater than 0")
 
-    return buyBookService( total_amount)
+    return buyBookService( total_amount, request)
+
+def verify_payment_controller(db,Auth_head,request,order_id,payment_id):
+    return verify_payment(order_id, payment_id)

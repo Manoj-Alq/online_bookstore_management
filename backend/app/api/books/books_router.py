@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Query
 from sqlalchemy.orm import Session
 from typing import List
 from utils.auth import *
@@ -9,8 +9,10 @@ from .books_controller import *
 httpbearer = AdminJWT()
 
 @router.get("/books/getAllbooks",response_model=List[Booksresponse], tags=["Books"])
-async def getAllbook(db: Session = Depends(get_session)):
-    return getAllbooksController(db)
+async def getAllbook(search: str = Query("", description="Search by title or author"),page: int = Query(1, gt=0, description="Page number"),
+    page_size: int = Query(10, gt=0, lt=101, description="Number of items per page"),genre: str = Query("", description="Filter by genre"),
+    publication_year: int = Query(0, description="Filter by publication year"),db: Session = Depends(get_session)):
+    return getAllbooksController(db,search,page,page_size,publication_year,genre)
 
 @router.get("/books/getabooks/{id}",response_model=Booksresponse, tags=["Books"])
 async def getSinglebook(id:int,db: Session = Depends(get_session)):
