@@ -1,9 +1,9 @@
-from .cart_model import Cart
+from .cart_model import *
 from utils.handlers import errorhandler
 from fastapi.responses import JSONResponse
 from datetime import datetime
 from razorpay import Client
-import json
+from api.books.books_models import Books
 
 RAZORPAY_KEY_ID = "rzp_test_RAMJ99EXsBQTjs"
 RAZORPAY_KEY_SECRET = "cHM6NdajU4bfG1RIJUJkv0CW"
@@ -26,16 +26,18 @@ def getSingleCartService(db,db_cart):
         db.rollback()
         errorhandler(400,f"{e}")
 
-def createcartsService(db, cart, customer_id):
+def createcartsService(db, cart, customer_id,db_books):
     try:
         db_cart = Cart(
-            title = cart.title,
-            author = cart.author,
-            price = cart.price,
+            book_id = db_books.book_id,
+            customer_id = customer_id,
+            title = db_books.title,
+            author = db_books.author,
+            price = db_books.price,
             counts = cart.counts,
             created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             created_by = customer_id,
-            total = cart.price * cart.counts
+            total = db_books.price * cart.counts
         )
         db.add(db_cart)
         db.commit()
@@ -44,7 +46,7 @@ def createcartsService(db, cart, customer_id):
         return JSONResponse({
             "message":"cart created successfully"
         })
-    
+        
     except Exception as e:
         db.rollback()
         errorhandler(400, f"{e}")
@@ -82,9 +84,9 @@ def deletecartervice(db,db_cart):
         db.rollback()
         errorhandler(400,f"{e}")
 
-def buyBookService(amount):
+def buyBookService(db,amount, carts_db):
     order_data = {
-        "amount": amount,
+        "amount": amount * 100,
         "currency": "INR",
         "payment_capture": 1
     }
@@ -93,19 +95,34 @@ def buyBookService(amount):
         response = client.order.create(data=order_data)
         order_id = response['id']
         # payment_id = response['payment'][0]['id']
+        for i in carts_db:
+            i.is_deleted = True
+            db.commit()
+             
         return response
     except Exception as e:
         errorhandler(400,f"order errors{e}")
 
     # Use test card details for payment
 
-def verify_payment(order_id: str, payment_id: str):
+def verify_payment(db,order_id, payment_id, books_quantity, book_ids, customer_id, total_quantity, price_per_book, total_price):
     try:
         # Verify the payment with Razorpay
         payment = client.payment.fetch(payment_id)
-
         # Check the payment status
         if payment['status'] == 'captured':
+            db_sales = Sales(
+                book_id = book_ids,
+                customer_id = customer_id,
+                books_quantity = books_quantity,
+                total_quantity = total_quantity,
+                price_per_book = price_per_book,
+                total_price = total_price,
+                created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            )
+            db.add(db_sales)
+            db.commit()
             return {"status": "Payment successful"}
         else:
             return {"status": "Payment failed"}

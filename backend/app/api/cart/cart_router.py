@@ -17,8 +17,8 @@ async def getSinglecart(id:int,db: Session = Depends(get_session)):
     return getSinglecartController(db, id) 
 
 @router.post("/cart/createcart",dependencies = [Depends(httpbearer)],response_model=cartresponse, tags=["Cart"])
-async def createcart(cart: create_cart,role:str = Depends(customer_authorization),Auth_head:str = Depends(get_authorization_header),db: Session = Depends(get_session)):
-    return createcartController(db,cart, Auth_head)
+async def createcart(book_id:int,cart: create_cart,role:str = Depends(customer_authorization),Auth_head:str = Depends(get_authorization_header),db: Session = Depends(get_session)):
+    return createcartController(db,cart, Auth_head,book_id)
 
 @router.post("/cart/updatecart",dependencies = [Depends(httpbearer)],response_model=cartresponse, tags=["Cart"])
 async def updatecart(cart: create_cart,id:int,Auth_head:str = Depends(get_authorization_header),db: Session = Depends(get_session)):
@@ -33,5 +33,5 @@ async def create_order(request:Request,role:str = Depends(customer_authorization
     return buyBooksController(db,Auth_head,request)
 
 @router.post("/verify_payment",dependencies = [Depends(httpbearer)], tags=["Cart"])
-async def create_order(order_id: str, payment_id: str,request:Request,role:str = Depends(customer_authorization),Auth_head:str = Depends(get_authorization_header),db: Session = Depends(get_session)):
-    return verify_payment_controller(db,order_id)
+async def create_order(cart_ids:List[int],order_id: str, payment_id: str,request:Request,role:str = Depends(customer_authorization),Auth_head:str = Depends(get_authorization_header),db: Session = Depends(get_session)):
+    return verify_payment_controller(db,order_id,payment_id,cart_ids)

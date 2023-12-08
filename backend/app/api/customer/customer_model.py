@@ -27,6 +27,9 @@ class Customer(Base):
 
     Customer_signinlogs = relationship("CustomerSigninLogs", back_populates="signinlogs_Customer")
     Customertoken = relationship("CustomerToken", back_populates="tokenCustomer")
+    Customer_review = relationship("Review", back_populates="Review_customer")
+    Customer_cart = relationship("Cart", back_populates="Cart_customer")
+    Customers_sales = relationship("Sales", back_populates="Sales_customers")
     
 class CustomerSigninLogs(Base):
     __tablename__ = "customer_signin_logs"

@@ -18,9 +18,12 @@ class Books(Base):
     cover_image = Column(String,nullable=False)
     average_rating = Column(Integer)
     price = Column(Integer,nullable=False)
+    sales_count = Column(Integer,nullable=False,default=0)
     availability = Column(Boolean,nullable=False)
     is_deleted = Column(Boolean, default=False)
     date_added = Column(DateTime, nullable=False)
     last_updated = Column(DateTime)
 
     Books_cart = relationship("Cart",back_populates="Cart_books")
+    Books_review = relationship("Review",back_populates="Review_books")
+    # Books_sales = relationship("Sales", back_populates="Sales_books")
