@@ -11,22 +11,18 @@ httpbearer = AdminJWT()
 @router.get("/admin/getAlladmin", response_model=List[AdminResponse], tags=["Admin"], summary="Get all admins")
 async def getAlladmin(db: Session = Depends(get_session)):
     return getAlladminController(db)
-    # return
 
 @router.get("/admin/getaadmin/{id}",dependencies = [Depends(httpbearer)], response_model=AdminResponse, tags=["Admin"], summary= "Get single admin")
 async def getSingleadmin(id:int,Auth_head:str = Depends(get_authorization_header),x : str = Depends(admin_authorization),db: Session = Depends(get_session)):
     return getSingleadminController(db,id,Auth_head)
-    # return
 
 @router.post("/admin/createadmin",dependencies = [Depends(httpbearer)], response_model=AdminResponse, tags=["Admin"], summary="admin can signup here")
 async def signupadmin(admin: AdminSignUp,Auth_head:str = Depends(get_authorization_header),x : str = Depends(admin_authorization),db: Session = Depends(get_session)):
     return signupController(db, admin, Auth_head)
-    # return
 
 @router.post("/admin/loginadmin", response_model=AdminResponse, tags=["Admin"], summary="admins can signin here")
 async def signinadmin(admin: AdminSignIn,db: Session = Depends(get_session)):
     return signinController(db,admin)
-    # return
 
 @router.get("/admin/getMyProfile",dependencies = [Depends(httpbearer)], response_model=AdminResponse, tags=["Admin"], summary="admin can fetch their own profile here")
 async def getMyProfile(Auth_head:str = Depends(get_authorization_header),role : str = Depends(admin_authorization),db: Session = Depends(get_session)):
