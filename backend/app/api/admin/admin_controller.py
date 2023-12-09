@@ -46,8 +46,7 @@ def signupController(db, admin, Auth_head):
 
 
 def signinController(db, admin):
-    if validation.None_validation(admin.username, admin.password
-                                  ):
+    if validation.None_validation(admin.username, admin.password):
         errorhandler(400, "All fields are required")
     if validation.empty_validation(admin):
         errorhandler(400, "Field's shouldn't be empty")
